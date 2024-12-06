@@ -1,0 +1,35 @@
+{
+  "name": "brasch101",
+  "version": "1.0.0",
+  "description": "Brasch101 est un bot pour le serveur de la communauté Discord de la 1ère Division des Libérateurs Célestes",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Julien Broyard",
+    "email": "broyard.dev@gmail.com"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "scripts": {
+    "build": "nest build",
+    "commit": "git-cz",
+    "check:code": "yarn format && yarn lint",
+    "format": "biome format --write",
+    "lint:fix": "biome lint --write",
+    "lint": "biome lint",
+    "prebuild": "rimraf dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@types/node": "22.10.1",
+    "commitizen": "^4.3.1",
+    "commitlint": "^19.6.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "lefthook": "^1.8.5",
+    "typescript": "5.7.2"
+  }
+}

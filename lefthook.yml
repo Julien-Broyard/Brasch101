@@ -1,0 +1,28 @@
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      run: yarn format
+    lint:
+      run: yarn lint
+
+pre-push:
+  parallel: true
+  commands:
+    format:
+      run: yarn format
+    lint:
+      run: yarn lint
+
+prepare-commit-msg:
+  commands:
+    commitzen:
+      interactive: true
+      run: yarn run cz --hook
+      env:
+        LEFTHOOK: 0
+
+commit-msg:
+  commands:
+    "lint commit message":
+      run: yarn run commitlint --edit {1}
