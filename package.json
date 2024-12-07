@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Brasch101 est un bot pour le serveur de la communauté Discord de la 1ère Division des Libérateurs Célestes",
   "license": "Apache-2.0",
+  "private": true,
+  "main": "dist/index.js",
   "author": {
     "name": "Julien Broyard",
     "email": "broyard.dev@gmail.com"
@@ -12,24 +14,41 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
-    "build": "nest build",
-    "commit": "git-cz",
+    "build": "tsc --project tsconfig.json",
     "check:code": "yarn format && yarn lint",
+    "commit": "git-cz",
     "format": "biome format --write",
     "lint:fix": "biome lint --write",
     "lint": "biome lint",
-    "prebuild": "rimraf dist"
+    "prebuild": "rimraf dist",
+    "start": "node dist/index.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@sapphire/decorators": "^6.1.1",
+    "@sapphire/framework": "^5.3.1",
+    "better-sqlite3": "^11.6.0",
+    "dayjs": "^1.11.13",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7",
+    "node-cron": "^3.0.3",
+    "pm2": "^5.4.3"
+  },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@commitlint/config-conventional": "^19.6.0",
+    "@sapphire/ts-config": "^5.0.1",
+    "@types/better-sqlite3": "^7.6.12",
     "@types/node": "22.10.1",
+    "@types/node-cron": "^3.0.11",
     "commitizen": "^4.3.1",
     "commitlint": "^19.6.0",
     "cz-conventional-changelog": "^3.3.0",
     "lefthook": "^1.8.5",
+    "rimraf": "^6.0.1",
     "typescript": "5.7.2"
   }
 }
