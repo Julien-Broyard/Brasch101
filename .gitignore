@@ -176,3 +176,6 @@ dist
 
 # Husky
 .husky/_
+
+# SQLite
+*.sqlite

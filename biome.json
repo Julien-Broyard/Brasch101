@@ -24,7 +24,8 @@
     }
   },
   "organizeImports": {
-    "enabled": true
+    "enabled": true,
+    "include": ["src/**/*.ts"]
   },
   "vcs": {
     "clientKind": "git",

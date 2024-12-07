@@ -1,18 +1,14 @@
 {
+  "extends": [
+    "@sapphire/ts-config",
+    "@sapphire/ts-config/extra-strict",
+    "@sapphire/ts-config/decorators"
+  ],
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
-    "declaration": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "incremental": true,
-    "module": "commonjs",
-    "outDir": "./dist",
-    "removeComments": true,
+    "outDir": "dist",
+    "rootDir": "src",
     "skipLibCheck": true,
-    "sourceMap": true,
-    "strict": true,
-    "target": "ES2022"
+    "tsBuildInfoFile": "dist/.tsbuildinfo"
   },
   "include": ["src/**/*"]
 }
