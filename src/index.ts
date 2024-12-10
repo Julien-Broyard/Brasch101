@@ -1,44 +1,21 @@
-import "./lib/setup";
+import "#lib/setup";
 
-import { inactivityCron } from "./crons/inactivity.cron";
+import { container } from "@sapphire/framework";
 
-import { SapphireClient } from "@sapphire/framework";
-import { ActivityType, GatewayIntentBits, Partials } from "discord.js";
+import { BraschClient } from "#lib/BraschClient";
+import { config } from "#root/config";
+// import { inactivityCron } from "./crons/inactivity.cron";
+// import { rankCron } from "./crons/rank.cron";
 
-const client = new SapphireClient({
-  intents: [
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.GuildModeration,
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildVoiceStates,
-    GatewayIntentBits.MessageContent,
-  ],
-  partials: [
-    Partials.Channel,
-    Partials.GuildMember,
-    Partials.Message,
-    Partials.Reaction,
-    Partials.User,
-  ],
-  presence: {
-    activities: [
-      { name: "Surveillance démocratique", type: ActivityType.Listening },
-    ],
-    status: "online",
-  },
-  loadMessageCommandListeners: true,
-});
+const client = new BraschClient();
 
 const main = async () => {
   try {
-    client.logger.info("Logging in");
-    await client.login(process.env.DISCORD_TOKEN);
-    inactivityCron.start();
-    client.logger.info("Logged in");
+    await client.login(config.DISCORD_TOKEN);
+    // rankCron.start();
+    // inactivityCron.start();
   } catch (error) {
-    client.logger.fatal(error);
+    container.logger.fatal(error);
     await client.destroy();
     process.exit(1);
   }

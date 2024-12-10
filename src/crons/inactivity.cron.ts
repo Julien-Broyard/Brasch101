@@ -1,8 +1,11 @@
 import { container } from "@sapphire/framework";
 import dayjs from "dayjs";
+import { lte, sql } from "drizzle-orm";
 import cron from "node-cron";
 
-import { type UserActivity, db } from "../lib/database";
+import { Role, config } from "../config";
+import { db } from "../db/database";
+import { userActivity } from "../db/schemas/user-activity.schema";
 
 export const inactivityCron = cron.schedule("*/15 * * * * *", async () => {
   container.logger.info("Running inactivity check...");
@@ -11,18 +14,20 @@ export const inactivityCron = cron.schedule("*/15 * * * * *", async () => {
     const oneMinuteAgo = dayjs().subtract(15, "seconds").valueOf();
 
     // Fetch both active and inactive users in a single query
-    const users = db
-      .prepare<number, UserActivity & { is_inactive: number }>(`
-        SELECT user_id, last_activity <= ? as is_inactive
-        FROM user_activity
-      `)
-      .all(oneMinuteAgo);
+    const users = await db
+      .select({
+        userId: userActivity.userId,
+        lastActivity: userActivity.lastActivity,
+        isInactive: sql<number>`CASE WHEN ${userActivity.lastActivity} <= ${oneMinuteAgo} THEN 1 ELSE 0 END`,
+      })
+      .from(userActivity)
+      .where(lte(userActivity.lastActivity, oneMinuteAgo));
 
-    const inactiveUsers = users.filter((u) => u.is_inactive);
-    const activeUsers = users.filter((u) => !u.is_inactive);
+    const inactiveUsers = users.filter((u) => u.isInactive);
+    const activeUsers = users.filter((u) => !u.isInactive);
 
-    const guildId = process.env.DISCORD_GUILD_ID;
-    const roleId = process.env.INACTIVE_ROLE_ID;
+    const guildId = config.DISCORD_GUILD_ID;
+    const roleId = Role.CRYOGENIZED;
 
     if (!guildId || !roleId) {
       throw new Error(
@@ -84,8 +89,8 @@ export const inactivityCron = cron.schedule("*/15 * * * * *", async () => {
 
     // Process all users in parallel
     await Promise.all([
-      ...inactiveUsers.map((u) => processUser(u.user_id, true)),
-      ...activeUsers.map((u) => processUser(u.user_id, false)),
+      ...inactiveUsers.map((u) => processUser(u.userId, true)),
+      ...activeUsers.map((u) => processUser(u.userId, false)),
     ]);
 
     container.logger.info(
