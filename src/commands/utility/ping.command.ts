@@ -26,6 +26,7 @@ export class PingCommand extends Command {
     if (isMessageInstance(msg)) {
       const diff = msg.createdTimestamp - interaction.createdTimestamp;
       const ping = Math.round(this.container.client.ws.ping);
+      this.container.logger.info(`Ping: ${ping}ms`);
       return interaction.editReply(
         `Pong 🏓! (Round trip took: ${diff}ms. Heartbeat: ${ping}ms.)`,
       );
